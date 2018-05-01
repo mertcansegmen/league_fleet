@@ -3,6 +3,7 @@
 
     <string name="start_button_text">Teste Başla!</string>
     <string name="settings_button_text">Ayarlar</string>
+    <string name="quit_button_text">Çık</string>
 
     <string name="question_image_description">Image of the question</string>
     <string name="mainmenu_image_description">Image for the main menu</string>

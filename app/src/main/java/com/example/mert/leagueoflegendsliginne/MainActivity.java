@@ -16,14 +16,16 @@ public class MainActivity extends AppCompatActivity {
 
     TextView questionTextView;
     ImageView questionImageView;
-    ProgressBar progressBar;
     Button aButton, bButton, cButton, dButton;
+    ProgressBar progressBar;
+
     int atQuestion;
+    int score, biggestScorePossible, trueCount;
+
     int questionID;
-    int[] answerIDs;
     int imageID;
-    int score, biggestScorePossible;
-    int trueCount;
+    int[] answerIDs;
+
 
     // 590 x 332
     private Question[] questionBank = new Question[]{
@@ -84,19 +86,19 @@ public class MainActivity extends AppCompatActivity {
     };
 
 
-    final int PROGRESS_BAR_INCREMENT = 10;
+    final int PROGRESS_BAR_INCREMENT = 6;
+    final int NUMBER_OF_QUESTIONS = 17;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Log.d("Ligin Ne - LoL", "OnCreate() called");
-
         int[] questionIndexes = findIndexes();
-        Question[] questions = new Question[10];
 
-        for(int i=0; i<10; i++)
+        Question[] questions = new Question[NUMBER_OF_QUESTIONS];
+
+        for(int i=0; i<NUMBER_OF_QUESTIONS; i++)
             questions[i] = questionBank[questionIndexes[i]];
 
         questionTextView = findViewById(R.id.question_text_view);
@@ -160,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
 
     private int[] findIndexes(){
         Random rnd = new Random();
-        int[] array = new int[10];
+        int[] array = new int[NUMBER_OF_QUESTIONS];
         for(int i=0; i<array.length; i++){
             array[i] = rnd.nextInt(questionBank.length);
             for(int j=0; j<i; j++){
@@ -192,4 +194,5 @@ public class MainActivity extends AppCompatActivity {
         checkAnswer('d', questions);
         updateQuestion(questions);
     }
+
 }

@@ -8,6 +8,8 @@ import android.widget.Button;
 public class LaunchActivity extends AppCompatActivity {
 
     Button startButton;
+    Button quitButton;
+    Button settingsButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,11 +17,25 @@ public class LaunchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_launch);
 
         startButton = findViewById(R.id.start_button);
-        startButton.setOnClickListener( e -> btnClicked());
+        settingsButton = findViewById(R.id.settings_button);
+        quitButton = findViewById(R.id.quit_button);
+
+        startButton.setOnClickListener(e -> startButtonClicked());
+        settingsButton.setOnClickListener(e -> settingsButtonClicked());
+        quitButton.setOnClickListener(e -> quitButtonClicked());
+
     }
-    private void btnClicked(){
+
+    private void startButtonClicked(){
         Intent intent = new Intent(LaunchActivity.this, MainActivity.class);
         startActivity(intent);
+    }
 
+    private void settingsButtonClicked() {
+
+    }
+
+    private void quitButtonClicked() {
+        moveTaskToBack(true);
     }
 }

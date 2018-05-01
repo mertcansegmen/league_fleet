@@ -10,10 +10,13 @@
 
     <ImageView
         android:id="@+id/question_image_view"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+
         android:adjustViewBounds="true"
         android:contentDescription="@string/question_image_description"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -21,18 +24,19 @@
 
     <TextView
         android:id="@+id/question_text_view"
+
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="67dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
+
         android:gravity="center"
         android:textColor="@color/colorText"
         android:textSize="18sp"
         android:textStyle="bold"
+
         app:layout_constraintBottom_toTopOf="@+id/button_b"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -43,18 +47,22 @@
     <Button
         android:id="@+id/button_a"
         style="@style/Base.Widget.AppCompat.Button.Borderless"
+
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="4dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="4dp"
         android:layout_marginStart="8dp"
+
         android:background="@color/colorButton"
         android:textAllCaps="false"
         android:textColor="@color/colorText"
         android:textSize="15sp"
         android:textStyle="bold"
+
         app:layout_constraintBottom_toTopOf="@+id/start_button"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintRight_toLeftOf="@id/button_b"
@@ -64,18 +72,22 @@
     <Button
         android:id="@+id/button_b"
         style="@style/Base.Widget.AppCompat.Button.Borderless"
+
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="4dp"
+
         android:background="@color/colorButton"
         android:textAllCaps="false"
         android:textColor="@color/colorText"
         android:textSize="15sp"
         android:textStyle="bold"
+
         app:layout_constraintBottom_toTopOf="@+id/button_d"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toRightOf="@id/button_a"
@@ -85,6 +97,7 @@
     <Button
         android:id="@+id/start_button"
         style="@style/Base.Widget.AppCompat.Button.Borderless"
+
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="50dp"
@@ -92,11 +105,13 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="4dp"
         android:layout_marginStart="8dp"
+
         android:background="@color/colorButton"
         android:textAllCaps="false"
         android:textColor="@color/colorText"
         android:textSize="15sp"
         android:textStyle="bold"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintRight_toLeftOf="@id/button_d"
@@ -106,18 +121,22 @@
     <Button
         android:id="@+id/button_d"
         style="@style/Base.Widget.AppCompat.Button.Borderless"
+
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+
         android:layout_marginBottom="50dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="4dp"
+
         android:background="@color/colorButton"
         android:textAllCaps="false"
         android:textColor="@color/colorText"
         android:textSize="15sp"
         android:textStyle="bold"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toRightOf="@id/start_button"
@@ -127,9 +146,12 @@
     <ProgressBar
         android:id="@+id/progress_bar"
         style="@android:style/Widget.ProgressBar.Horizontal"
+
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+
         android:indeterminate="false"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

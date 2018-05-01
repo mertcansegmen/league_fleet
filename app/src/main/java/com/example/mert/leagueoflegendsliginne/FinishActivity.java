@@ -10,6 +10,7 @@ import android.widget.TextView;
 public class FinishActivity extends AppCompatActivity {
 
     Button menuButton;
+    Button quitButton;
     TextView scoreTV;
     ImageView leagueImageView;
     TextView leagueTextView;
@@ -62,10 +63,27 @@ public class FinishActivity extends AppCompatActivity {
         setLayout(leagueTextView, leagueImageView, league);
 
         scoreTV = findViewById(R.id.score_text_view);
-        scoreTV.setText(trueCount + "/" + 10);
+        scoreTV.setText(trueCount + "/" + 17);
 
         menuButton = findViewById(R.id.go_menu_button);
+        quitButton = findViewById(R.id.quit_button);
+
         menuButton.setOnClickListener(e -> menuButtonClicked());
+        quitButton.setOnClickListener(e -> quitButtonClicked());
+    }
+
+    private void quitButtonClicked() {
+        moveTaskToBack(true);
+    }
+
+    private void menuButtonClicked(){
+        Intent intent = new Intent(FinishActivity.this, LaunchActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
     }
 
     private void setLayout(TextView leagueTextView, ImageView leagueImageView, int league) {
@@ -159,9 +177,4 @@ public class FinishActivity extends AppCompatActivity {
         }
     }
 
-
-    private void menuButtonClicked(){
-        Intent intent = new Intent(FinishActivity.this, LaunchActivity.class);
-        startActivity(intent);
-    }
 }
