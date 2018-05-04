@@ -66,6 +66,7 @@
     <string name="question_52">Kadim Ejderha\'yı öldürmek her bir takım üyesine kaç altın kazandırır?</string>
     <string name="question_53">Braum bir hedefin üzerinde kaç yük biriktirirse hehdefin sersemlemesine neden olur?</string>
     <string name="question_54">Okyanus ejderini ilk kez öldüren takımın üyeleri 5 saniyede bir eksik can ve manalarının yüzde kaçını yeniler?</string>
+    <string name="question_55">Aşağıdaki nesnelerden hangisi üzerine ışınlan yeteneği kullanılamaz?</string>
 
     <string name="answer_1a">250</string>
     <string name="answer_1b">280</string>
@@ -283,6 +284,10 @@
     <string name="answer_54b">6</string>
     <string name="answer_54c">8</string>
     <string name="answer_54d">12</string>
+    <string name="answer_55a">Totem</string>
+    <string name="answer_55b">Tresh\'in feneri</string>
+    <string name="answer_55c">Jarvan\'ın sancağı</string>
+    <string name="answer_55d">Maokai\'nin fideleri</string>
 
     <string name="finish_text_view">Ligin:</string>
     <string name="go_menu_button_text">Menüye Dön</string>

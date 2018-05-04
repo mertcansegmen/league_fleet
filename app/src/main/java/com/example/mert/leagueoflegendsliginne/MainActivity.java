@@ -7,9 +7,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import java.util.Random;
+import android.os.Handler;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -64,17 +63,17 @@ public class MainActivity extends AppCompatActivity {
                     new int[]{R.string.answer_17a, R.string.answer_17b, R.string.answer_17c, R.string.answer_17d}),
         new Question(R.string.question_18, R.drawable.question_image_18, 'a', 3,
                     new int[]{R.string.answer_18a, R.string.answer_18b, R.string.answer_18c, R.string.answer_18d}),
-        new Question(R.string.question_19, R.drawable.question_image_19, 'a', 3,
+        new Question(R.string.question_19, R.drawable.question_image_19_20_21_22_23_24, 'a', 3,
                     new int[]{R.string.answer_19a, R.string.answer_19b, R.string.answer_19c, R.string.answer_19d}),
-        new Question(R.string.question_20, R.drawable.question_image_20, 'd', 2,
+        new Question(R.string.question_20, R.drawable.question_image_19_20_21_22_23_24, 'd', 2,
                     new int[]{R.string.answer_20a, R.string.answer_20b, R.string.answer_20c, R.string.answer_20d}),
-        new Question(R.string.question_21, R.drawable.question_image_21, 'c', 2,
+        new Question(R.string.question_21, R.drawable.question_image_19_20_21_22_23_24, 'c', 2,
                     new int[]{R.string.answer_21a, R.string.answer_21b, R.string.answer_21c, R.string.answer_21d}),
-        new Question(R.string.question_22, R.drawable.question_image_22, 'd', 3,
+        new Question(R.string.question_22, R.drawable.question_image_19_20_21_22_23_24, 'd', 3,
                     new int[]{R.string.answer_22a, R.string.answer_22b, R.string.answer_22c, R.string.answer_22d}),
-        new Question(R.string.question_23, R.drawable.question_image_23, 'b', 2,
+        new Question(R.string.question_23, R.drawable.question_image_19_20_21_22_23_24, 'b', 2,
                     new int[]{R.string.answer_23a, R.string.answer_23b, R.string.answer_23c, R.string.answer_23d}),
-        new Question(R.string.question_24, R.drawable.question_image_24, 'a', 2,
+        new Question(R.string.question_24, R.drawable.question_image_19_20_21_22_23_24, 'a', 2,
                     new int[]{R.string.answer_24a, R.string.answer_24b, R.string.answer_24c, R.string.answer_24d}),
         new Question(R.string.question_25, R.drawable.question_image_2_25_49, 'a', 2,
                     new int[]{R.string.answer_25a, R.string.answer_25b, R.string.answer_25c, R.string.answer_25d}),
@@ -135,7 +134,9 @@ public class MainActivity extends AppCompatActivity {
         new Question(R.string.question_53, R.drawable.question_image_53, 'c', 3,
                     new int[]{R.string.answer_53a, R.string.answer_53b, R.string.answer_53c, R.string.answer_53d}),
         new Question(R.string.question_54, R.drawable.question_image_54, 'c', 4,
-                    new int[]{R.string.answer_54a, R.string.answer_54b, R.string.answer_54c, R.string.answer_54d})
+                    new int[]{R.string.answer_54a, R.string.answer_54b, R.string.answer_54c, R.string.answer_54d})/*,
+        new Question(R.string.question_55, R.drawable.question_image_55, 'd', 2,
+                    new int[]{R.string.answer_55a, R.string.answer_55b, R.string.answer_55c, R.string.answer_55d})*/
     };
 
 
@@ -147,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        int[] questionIndexes = findIndexes();
+        int[] questionIndexes = findRandomIndexes();
 
         Question[] questions = new Question[NUMBER_OF_QUESTIONS];
 
@@ -162,33 +163,25 @@ public class MainActivity extends AppCompatActivity {
         cButton = findViewById(R.id.start_button);
         dButton = findViewById(R.id.button_d);
 
-        answerIDs = questions[atQuestion].getAnswerIDs();
-        questionID = questions[atQuestion].getQuestionID();
-        imageID = questions[atQuestion].getImageID();
+        atQuestion = -1;
+        updateQuestion(questions);
 
-        questionTextView.setText(questionID);
-        questionImageView.setImageResource(imageID);
-        aButton.setText(answerIDs[0]);
-        bButton.setText(answerIDs[1]);
-        cButton.setText(answerIDs[2]);
-        dButton.setText(answerIDs[3]);
-
-        aButton.setOnClickListener(e -> aButtonClicked(questions));
-        bButton.setOnClickListener(e -> bButtonClicked(questions));
-        cButton.setOnClickListener(e -> cButtonClicked(questions));
-        dButton.setOnClickListener(e -> dButtonClicked(questions));
+        aButton.setOnClickListener(e -> checkAnswer('a', questions, aButton));
+        bButton.setOnClickListener(e -> checkAnswer('b', questions, bButton));
+        cButton.setOnClickListener(e -> checkAnswer('c', questions, cButton));
+        dButton.setOnClickListener(e -> checkAnswer('d', questions, dButton));
 
     }
 
     private void updateQuestion(Question[] questions){
-        atQuestion = (atQuestion + 1) % questions.length;
-        progressBar.incrementProgressBy(PROGRESS_BAR_INCREMENT);
-        if(atQuestion == 0){
+        atQuestion = (atQuestion + 1);
+        if(atQuestion == NUMBER_OF_QUESTIONS){
             Intent intent = new Intent(MainActivity.this, FinishActivity.class);
             intent.putExtra("score", score);
             intent.putExtra("biggestScorePossible", biggestScorePossible);
             intent.putExtra("trueCount", trueCount);
             startActivity(intent);
+            return;
         }
         questionID = questions[atQuestion].getQuestionID();
         imageID = questions[atQuestion].getImageID();
@@ -199,21 +192,46 @@ public class MainActivity extends AppCompatActivity {
         bButton.setText(answerIDs[1]);
         cButton.setText(answerIDs[2]);
         dButton.setText(answerIDs[3]);
+        if(atQuestion != 0)
+            progressBar.incrementProgressBy(PROGRESS_BAR_INCREMENT);
     }
 
-    private void checkAnswer(char userSelection, Question[] questions){
+    private void checkAnswer(char userSelection, Question[] questions, Button button) {
+
+        // Storing sum of all the questions difficulties
         biggestScorePossible += questions[atQuestion].getDifficulty();
+        Handler handler = new Handler();
         if(userSelection == questions[atQuestion].getAnswer()){
-            Toast.makeText(this, R.string.dogru_toast, Toast.LENGTH_SHORT).show();
+            // Increases the score depending on difficulty of the question
             score += questions[atQuestion].getDifficulty();
             trueCount++;
+
+            button.setBackgroundResource(R.color.colorTrueButton);
+            disableButtons();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    button.setBackgroundResource(R.color.colorButton);
+                    updateQuestion(questions);
+                    enableButtons();
+                }
+            }, 1000);
+
         }
+
         else{
-            Toast.makeText(this, R.string.yanlis_toast, Toast.LENGTH_SHORT).show();
+            button.setBackgroundResource(R.color.colorFalseButton);
+            disableButtons();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    button.setBackgroundResource(R.color.colorButton);
+                    updateQuestion(questions);
+                    enableButtons();
+                }
+            }, 1000);
         }
     }
 
-    private int[] findIndexes(){
+    private int[] findRandomIndexes(){
         Random rnd = new Random();
         int[] array = new int[NUMBER_OF_QUESTIONS];
         for(int i=0; i<array.length; i++){
@@ -228,24 +246,19 @@ public class MainActivity extends AppCompatActivity {
         return array;
     }
 
-    private void aButtonClicked(Question[] questions){
-        checkAnswer('a', questions);
-        updateQuestion(questions);
+    private void disableButtons(){
+        aButton.setClickable(false);
+        bButton.setClickable(false);
+        cButton.setClickable(false);
+        dButton.setClickable(false);
     }
 
-    private void bButtonClicked(Question[] questions){
-        checkAnswer('b', questions);
-        updateQuestion(questions);
-    }
+    private void enableButtons(){
+        aButton.setClickable(true);
+        bButton.setClickable(true);
+        cButton.setClickable(true);
+        dButton.setClickable(true);
 
-    private void cButtonClicked(Question[] questions){
-        checkAnswer('c', questions);
-        updateQuestion(questions);
-    }
-
-    private void dButtonClicked(Question[] questions){
-        checkAnswer('d', questions);
-        updateQuestion(questions);
     }
 
 }
