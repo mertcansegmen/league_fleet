@@ -10,11 +10,11 @@ import org.w3c.dom.Text;
  */
 
 public class Question {
-    int questionID;
-    int imageID;
-    char answer;
-    int difficulty;
-    int[] answerIDs;
+    private int questionID;
+    private int imageID;
+    private char answer;
+    private int difficulty;
+    private int[] answerIDs;
 
     public int[] getAnswerIDs() {
         return answerIDs;

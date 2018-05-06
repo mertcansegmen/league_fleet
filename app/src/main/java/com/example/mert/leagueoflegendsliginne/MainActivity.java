@@ -1,28 +1,51 @@
 package com.example.mert.leagueoflegendsliginne;
 
+import android.app.Activity;
+import android.app.assist.AssistContent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.CountDownTimer;
+import android.os.PersistableBundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.view.ActionMode;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.KeyEvent;
+import android.view.KeyboardShortcutGroup;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import java.util.List;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import android.os.Handler;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView questionTextView;
     ImageView questionImageView;
-    Button aButton, bButton, cButton, dButton;
-    ProgressBar progressBar;
+    TextView questionTextView;
     ProgressBar circularProgressBar;
     TextView questionTimerTextView;
+    Button aButton, bButton, cButton, dButton;
+    ProgressBar progressBar;
 
     int atQuestion;
     int score, biggestScorePossible, trueCount;
@@ -34,9 +57,12 @@ public class MainActivity extends AppCompatActivity {
     int imageID;
     int[] answerIDs;
 
+    SoundPool buttonSounds;
+    int trueButtonSoundID;
+    int falseButtonSoundID;
 
-    // 590 x 332
     Question[] questionBank = createQuestionBank();
+    Question[] questions;
 
 
     final int PROGRESS_BAR_MAX = 1000;
@@ -50,12 +76,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Log.i(TAG, "onCreate");
+
         int[] questionIndexes = findRandomIndexes();
 
-        Question[] questions = new Question[NUMBER_OF_QUESTIONS];
+        questions = new Question[NUMBER_OF_QUESTIONS];
 
         for(int i=0; i<NUMBER_OF_QUESTIONS; i++)
             questions[i] = questionBank[questionIndexes[i]];
+
+        buttonSounds = new SoundPool(2, AudioManager.STREAM_MUSIC, 0);
+        trueButtonSoundID = buttonSounds.load(this, R.raw.correct, 1);
+        falseButtonSoundID = buttonSounds.load(this, R.raw.incorrect,1);
 
         questionImageView = findViewById(R.id.question_image_view);
         questionTextView = findViewById(R.id.question_text_view);
@@ -67,17 +99,58 @@ public class MainActivity extends AppCompatActivity {
         dButton = findViewById(R.id.button_d);
         progressBar = findViewById(R.id.progress_bar);
 
-        updateQuestion(questions);
+        disableButtonClickSounds();
 
-        aButton.setOnClickListener(e -> buttonClicked('a', questions, aButton));
-        bButton.setOnClickListener(e -> buttonClicked('b', questions, bButton));
-        cButton.setOnClickListener(e -> buttonClicked('c', questions, cButton));
-        dButton.setOnClickListener(e -> buttonClicked('d', questions, dButton));
+        updateQuestion();
+
+        aButton.setOnClickListener(e -> buttonClicked('a', aButton));
+        bButton.setOnClickListener(e -> buttonClicked('b', bButton));
+        cButton.setOnClickListener(e -> buttonClicked('c', cButton));
+        dButton.setOnClickListener(e -> buttonClicked('d', dButton));
 
     }
 
-    private void updateQuestion(Question[] questions){
-        enableButtons();
+    private void buttonClicked(char userSelection, Button button) {
+        disableButtons();
+
+        // Storing sum of all the questions difficulties
+        biggestScorePossible += questions[atQuestion].getDifficulty();
+        progressBar.incrementProgressBy(PROGRESS_BAR_INCREMENT);
+        counter.cancel();
+
+        handler = new Handler();
+
+        if(userSelection == questions[atQuestion].getAnswer()){
+            // Increases the score depending on difficulty of the question
+            buttonSounds.play(trueButtonSoundID, 0.5f, 0.5f, 0, 0, 1.0f);
+            button.setBackgroundResource(R.color.colorTrueButton);
+            score += questions[atQuestion].getDifficulty();
+            trueCount++;
+
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    button.setBackgroundResource(R.color.colorButton);
+                    atQuestion = (atQuestion + 1);
+                    updateQuestion();
+                }
+            }, BUTTON_COLOR_CHANGING_TIME);
+
+        }
+
+        else{
+            buttonSounds.play(falseButtonSoundID, 0.5f, 0.5f, 0, 0, 1.0f);
+            button.setBackgroundResource(R.color.colorFalseButton);
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    button.setBackgroundResource(R.color.colorButton);
+                    atQuestion = (atQuestion + 1);
+                    updateQuestion();
+                }
+            }, BUTTON_COLOR_CHANGING_TIME);
+        }
+    }
+
+    private void updateQuestion(){
 
         if(atQuestion == NUMBER_OF_QUESTIONS){
             Intent intent = new Intent(MainActivity.this, FinishActivity.class);
@@ -110,49 +183,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFinish() {
                 atQuestion++;
-                updateQuestion(questions);
+                updateQuestion();
             }
         };
         counter.start();
 
-    }
+        enableButtons();
 
-    private void buttonClicked(char userSelection, Question[] questions, Button button) {
-        disableButtons();
-
-        // Storing sum of all the questions difficulties
-        biggestScorePossible += questions[atQuestion].getDifficulty();
-        progressBar.incrementProgressBy(PROGRESS_BAR_INCREMENT);
-        counter.cancel();
-
-        handler = new Handler();
-
-        if(userSelection == questions[atQuestion].getAnswer()){
-            // Increases the score depending on difficulty of the question
-            button.setBackgroundResource(R.color.colorTrueButton);
-            score += questions[atQuestion].getDifficulty();
-            trueCount++;
-
-            handler.postDelayed(new Runnable() {
-                public void run() {
-                    button.setBackgroundResource(R.color.colorButton);
-                    atQuestion = (atQuestion + 1);
-                    updateQuestion(questions);
-                }
-            }, BUTTON_COLOR_CHANGING_TIME);
-
-        }
-
-        else{
-            button.setBackgroundResource(R.color.colorFalseButton);
-            handler.postDelayed(new Runnable() {
-                public void run() {
-                    button.setBackgroundResource(R.color.colorButton);
-                    atQuestion = (atQuestion + 1);
-                    updateQuestion(questions);
-                }
-            }, BUTTON_COLOR_CHANGING_TIME);
-        }
     }
 
     private int[] findRandomIndexes(){
@@ -168,6 +205,13 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return array;
+    }
+
+    private void disableButtonClickSounds() {
+        aButton.setSoundEffectsEnabled(false);
+        bButton.setSoundEffectsEnabled(false);
+        cButton.setSoundEffectsEnabled(false);
+        dButton.setSoundEffectsEnabled(false);
     }
 
     private void disableButtons(){
@@ -197,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
                         new int[]{R.string.answer_4a, R.string.answer_4b, R.string.answer_4c, R.string.answer_4d}),
             new Question(R.string.question_5, R.drawable.question_image_5, 'a', 4,
                         new int[]{R.string.answer_5a, R.string.answer_5b, R.string.answer_5c, R.string.answer_5d}),
-            new Question(R.string.question_6, R.drawable.question_image_6, 'd', 2,
+            new Question(R.string.question_6, R.drawable.question_image_6_27_41, 'd', 2,
                         new int[]{R.string.answer_6a, R.string.answer_6b, R.string.answer_6c, R.string.answer_6d}),
             new Question(R.string.question_7, R.drawable.question_image_7, 'a', 3,
                         new int[]{R.string.answer_7a, R.string.answer_7b, R.string.answer_7c, R.string.answer_7d}),
@@ -239,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
                         new int[]{R.string.answer_25a, R.string.answer_25b, R.string.answer_25c, R.string.answer_25d}),
             new Question(R.string.question_26, R.drawable.question_image_26, 'd', 3,
                         new int[]{R.string.answer_26a, R.string.answer_26b, R.string.answer_26c, R.string.answer_26d}),
-            new Question(R.string.question_27, R.drawable.question_image_27_41, 'c', 1,
+            new Question(R.string.question_27, R.drawable.question_image_6_27_41, 'c', 1,
                         new int[]{R.string.answer_27a, R.string.answer_27b, R.string.answer_27c, R.string.answer_27d}),
             new Question(R.string.question_28, R.drawable.question_image_28, 'd', 4,
                         new int[]{R.string.answer_28a, R.string.answer_28b, R.string.answer_28c, R.string.answer_28d}),
@@ -267,7 +311,7 @@ public class MainActivity extends AppCompatActivity {
                         new int[]{R.string.answer_39a, R.string.answer_39b, R.string.answer_39c, R.string.answer_39d}),
             new Question(R.string.question_40, R.drawable.question_image_40, 'c', 1,
                         new int[]{R.string.answer_40a, R.string.answer_40b, R.string.answer_40c, R.string.answer_40d}),
-            new Question(R.string.question_41, R.drawable.question_image_27_41, 'd', 3,
+            new Question(R.string.question_41, R.drawable.question_image_6_27_41, 'd', 3,
                         new int[]{R.string.answer_41a, R.string.answer_41b, R.string.answer_41c, R.string.answer_41d}),
             new Question(R.string.question_42, R.drawable.question_image_42, 'c', 1,
                         new int[]{R.string.answer_42a, R.string.answer_42b, R.string.answer_42c, R.string.answer_42d}),
@@ -294,12 +338,20 @@ public class MainActivity extends AppCompatActivity {
             new Question(R.string.question_53, R.drawable.question_image_53, 'c', 3,
                         new int[]{R.string.answer_53a, R.string.answer_53b, R.string.answer_53c, R.string.answer_53d}),
             new Question(R.string.question_54, R.drawable.question_image_54, 'c', 4,
-                        new int[]{R.string.answer_54a, R.string.answer_54b, R.string.answer_54c, R.string.answer_54d})/*,
+                        new int[]{R.string.answer_54a, R.string.answer_54b, R.string.answer_54c, R.string.answer_54d}),
             new Question(R.string.question_55, R.drawable.question_image_55, 'd', 2,
-                        new int[]{R.string.answer_55a, R.string.answer_55b, R.string.answer_55c, R.string.answer_55d})*/
+                        new int[]{R.string.answer_55a, R.string.answer_55b, R.string.answer_55c, R.string.answer_55d})
         };
     }
 
 
+    private static final String TAG = "Logs";
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i(TAG, "onPause");
+        counter.cancel();
+        finish();
+    }
 }

@@ -5,8 +5,8 @@ package com.example.mert.leagueoflegendsliginne;
  */
 
 public class League {
-    int imageID;
-    int leagueNameID;
+    private int imageID;
+    private int leagueNameID;
 
     public int getImageID() {
         return imageID;
