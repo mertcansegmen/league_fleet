@@ -14,11 +14,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
 
         android:contentDescription="@string/mainmenu_image_description"
         app:srcCompat="@drawable/rank_27"
@@ -38,9 +33,6 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="52dp"
-
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
 
         android:background="@color/colorButton"
         android:text="@string/start_button_text"
@@ -66,9 +58,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
 
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-
         android:background="@color/colorButton"
         android:text="@string/settings_button_text"
         android:textAllCaps="false"
@@ -92,9 +81,6 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
 
         android:background="@color/colorButton"
         android:text="@string/quit_button_text"

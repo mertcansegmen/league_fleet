@@ -1,15 +1,16 @@
 <resources>
     <string name="app_name">Ligin Ne - LoL</string>
 
+    <!-- Start Activity -->
+
     <string name="start_button_text">Teste Başla!</string>
     <string name="settings_button_text">Ayarlar</string>
     <string name="quit_button_text">Çık</string>
 
+    <!-- Main Activity -->
+
     <string name="question_image_description">Image of the question</string>
     <string name="mainmenu_image_description">Image for the main menu</string>
-
-    <string name="dogru_toast">Doğru!</string>
-    <string name="yanlis_toast">Yanlış!</string>
 
     <string name="question_1">Sıçra yeteneği kaç saniyede bir kullanılabilir?</string>
     <string name="question_2">Baron Nashor oyunun kaçıncı dakikasında canlanır?</string>
@@ -289,6 +290,8 @@
     <string name="answer_55c">Jarvan\'ın sancağı</string>
     <string name="answer_55d">Maokai\'nin fideleri</string>
 
+    <!-- Finish Activity -->
+
     <string name="finish_text_view">Ligin:</string>
     <string name="go_menu_button_text">Menüye Dön</string>
     <string name="league_image_desc">Image to display the final league</string>
@@ -320,5 +323,16 @@
     <string name="league_tv_r23">Elmas III</string>
     <string name="league_tv_r22">Elmas IV</string>
     <string name="league_tv_r21">Elmas V</string>
+
+    <!-- Settings Activity -->
+
+    <string name="spinner_text_field">Ses</string>
+    <string name="contact_button">İletişim bilgilerini göster</string>
+    <string name="version_text_view">v1.0</string>
+    <string name="contact_text_view">lolliginne@gmail.com</string>
+    <string name="rate_button">Uygulamayı puanla!</string>
+
+
+
 
 </resources>

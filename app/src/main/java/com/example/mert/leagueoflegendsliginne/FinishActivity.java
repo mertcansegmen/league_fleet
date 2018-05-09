@@ -1,6 +1,10 @@
 package com.example.mert.leagueoflegendsliginne;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
@@ -9,12 +13,20 @@ import android.widget.TextView;
 
 public class FinishActivity extends AppCompatActivity {
 
+    //View variables
     Button menuButton;
     Button quitButton;
-    TextView scoreTV;
+    TextView scoreTextView;
     ImageView leagueImageView;
     TextView leagueTextView;
 
+    //Variables about sound
+    SoundPool buttonSounds;
+    int buttonSoundID;
+    float volume;
+    boolean isVolumeOn;
+
+    //Creating an array out of League objects, it holds all the leagues informations(league image and its name)
     private League[] leagues = new League[]{
             new League(R.drawable.rank_1, R.string.league_tv_r1),
             new League(R.drawable.rank_2, R.string.league_tv_r2),
@@ -50,48 +62,90 @@ public class FinishActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_finish);
 
+        //Initialize views
+        leagueImageView = findViewById(R.id.league_image_view);
+        leagueTextView = findViewById(R.id.final_league_text_view);
+        menuButton = findViewById(R.id.go_menu_button);
+        quitButton = findViewById(R.id.quit_button);
+        scoreTextView = findViewById(R.id.score_text_view);
+
+        //Getting the values from main activity
         Intent intent = getIntent();
         int score = intent.getIntExtra("score",0);
         int biggestScorePossible = intent.getIntExtra("biggestScorePossible", 0);
         int trueCount = intent.getIntExtra("trueCount", 0);
 
+        //Configures the deserved league
         int league = findLeague(score, biggestScorePossible);
 
-        leagueImageView = findViewById(R.id.league_image_view);
-        leagueTextView = findViewById(R.id.final_league_text_view);
+        //Puts the league image and its name in the screen
+        setLayout(league);
 
-        setLayout(leagueTextView, leagueImageView, league);
+        //Displays the number of trues and number of all questions
+        scoreTextView.setText(trueCount + "/" + 17);
 
-        scoreTV = findViewById(R.id.score_text_view);
-        scoreTV.setText(trueCount + "/" + 17);
+        //Creating the soundpool for button sound
+        buttonSounds = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+        buttonSoundID = buttonSounds.load(this, R.raw.default_button, 1);
 
-        menuButton = findViewById(R.id.go_menu_button);
-        quitButton = findViewById(R.id.quit_button);
+        disableButtonClickSounds();
+        checkPreferences();
 
+        //Button listeners
         menuButton.setOnClickListener(e -> menuButtonClicked());
         quitButton.setOnClickListener(e -> quitButtonClicked());
     }
 
+    //Quits app
     private void quitButtonClicked() {
+        playButtonSound();
+
         moveTaskToBack(true);
     }
 
+    //Goes to main menu
     private void menuButtonClicked(){
+        playButtonSound();
+
         Intent intent = new Intent(FinishActivity.this, LaunchActivity.class);
         startActivity(intent);
     }
 
+    //Also goes to main menu when back button is pressed
     @Override
     public void onBackPressed() {
         moveTaskToBack(true);
     }
 
-    private void setLayout(TextView leagueTextView, ImageView leagueImageView, int league) {
+    //Checks if the sounds are on or off and plays the sound
+    private void playButtonSound(){
+        if(isVolumeOn)
+            volume = 1f;
+        else
+            volume = 0f;
+
+        buttonSounds.play(buttonSoundID, volume, volume, 0, 0, 1.0f);
+    }
+
+    //Sets the image and text of the league
+    private void setLayout(int league) {
         leagueImageView.setImageResource(leagues[league].getImageID());
         leagueTextView.setText(leagues[league].getLeagueNameID());
     }
 
+    //Disables the default button sounds
+    private void disableButtonClickSounds() {
+        menuButton.setSoundEffectsEnabled(false);
+        quitButton.setSoundEffectsEnabled(false);
+    }
 
+    //Checks the pref file then sets isVolumeOn variable according to it
+    private void checkPreferences() {
+        SharedPreferences pref = getSharedPreferences("Settings", Context.MODE_PRIVATE);
+        isVolumeOn = pref.getBoolean("volume", false);
+    }
+
+    //Algorithm for configuring users league
     private int findLeague(int score, int biggestScorePossible){
 
         if(score <= biggestScorePossible*(27/27.0) && score > biggestScorePossible * (26/27.0)){

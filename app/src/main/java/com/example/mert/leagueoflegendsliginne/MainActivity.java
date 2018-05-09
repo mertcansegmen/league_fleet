@@ -1,45 +1,25 @@
 package com.example.mert.leagueoflegendsliginne;
 
-import android.app.Activity;
-import android.app.assist.AssistContent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.CountDownTimer;
-import android.os.PersistableBundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.view.ActionMode;
-import android.util.AttributeSet;
-import android.util.Log;
-import android.view.ContextMenu;
-import android.view.KeyEvent;
-import android.view.KeyboardShortcutGroup;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.WindowManager;
+import android.os.Handler;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.util.List;
 import java.util.Random;
 
-import android.os.Handler;
 
 public class MainActivity extends AppCompatActivity {
 
+    //View variables
     ImageView questionImageView;
     TextView questionTextView;
     ProgressBar circularProgressBar;
@@ -47,24 +27,31 @@ public class MainActivity extends AppCompatActivity {
     Button aButton, bButton, cButton, dButton;
     ProgressBar progressBar;
 
+    //Variables that will hold infos about questions
     int atQuestion;
     int score, biggestScorePossible, trueCount;
 
+    //Variables about time
     Handler handler;
     CountDownTimer counter;
 
+    //Variables that will hold IDs
     int questionID;
     int imageID;
     int[] answerIDs;
 
+    //Variables about sound
     SoundPool buttonSounds;
     int trueButtonSoundID;
     int falseButtonSoundID;
+    float volume;
+    boolean isVolumeOn;
 
+    //Arrays that holds questions
     Question[] questionBank = createQuestionBank();
     Question[] questions;
 
-
+    //Final variables
     final int PROGRESS_BAR_MAX = 1000;
     final int PROGRESS_BAR_INCREMENT = 59;
     final int CIRCULAR_PROGRESS_BAR_INCREMENT = -33;
@@ -76,19 +63,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Log.i(TAG, "onCreate");
-
-        int[] questionIndexes = findRandomIndexes();
-
-        questions = new Question[NUMBER_OF_QUESTIONS];
-
-        for(int i=0; i<NUMBER_OF_QUESTIONS; i++)
-            questions[i] = questionBank[questionIndexes[i]];
-
-        buttonSounds = new SoundPool(2, AudioManager.STREAM_MUSIC, 0);
-        trueButtonSoundID = buttonSounds.load(this, R.raw.correct, 1);
-        falseButtonSoundID = buttonSounds.load(this, R.raw.incorrect,1);
-
+        //Initialize views
         questionImageView = findViewById(R.id.question_image_view);
         questionTextView = findViewById(R.id.question_text_view);
         circularProgressBar = findViewById(R.id.circularProgressBar);
@@ -99,10 +74,27 @@ public class MainActivity extends AppCompatActivity {
         dButton = findViewById(R.id.button_d);
         progressBar = findViewById(R.id.progress_bar);
 
+        //Picking random indexes for the question that will be shown to user
+        int[] questionIndexes = findRandomIndexes();
+
+        //Initializing questions that will be shown to user
+        questions = new Question[NUMBER_OF_QUESTIONS];
+
+        //Setting the questions that will be shown to user
+        for(int i=0; i<NUMBER_OF_QUESTIONS; i++)
+            questions[i] = questionBank[questionIndexes[i]];
+
+        //Creating the sound pool for button sounds
+        buttonSounds = new SoundPool(2, AudioManager.STREAM_MUSIC, 0);
+        trueButtonSoundID = buttonSounds.load(this, R.raw.correct, 1);
+        falseButtonSoundID = buttonSounds.load(this, R.raw.incorrect,1);
+
         disableButtonClickSounds();
+        checkPreferences();
 
         updateQuestion();
 
+        //Button listeners
         aButton.setOnClickListener(e -> buttonClicked('a', aButton));
         bButton.setOnClickListener(e -> buttonClicked('b', bButton));
         cButton.setOnClickListener(e -> buttonClicked('c', cButton));
@@ -110,8 +102,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //This function will be called when a button is clicked
     private void buttonClicked(char userSelection, Button button) {
         disableButtons();
+        if(isVolumeOn)
+            volume = 0.5f;
+        else
+            volume = 0;
 
         // Storing sum of all the questions difficulties
         biggestScorePossible += questions[atQuestion].getDifficulty();
@@ -120,9 +117,10 @@ public class MainActivity extends AppCompatActivity {
 
         handler = new Handler();
 
+        //If the answer is correct sets the color of chosen button green, waits for 0.3 seconds and updates the question
         if(userSelection == questions[atQuestion].getAnswer()){
             // Increases the score depending on difficulty of the question
-            buttonSounds.play(trueButtonSoundID, 0.5f, 0.5f, 0, 0, 1.0f);
+            buttonSounds.play(trueButtonSoundID, volume, volume, 0, 0, 1.0f);
             button.setBackgroundResource(R.color.colorTrueButton);
             score += questions[atQuestion].getDifficulty();
             trueCount++;
@@ -137,8 +135,9 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+        //If the answer is incorrect sets the color of chosen button red, waits for 0.3 seconds and updates the question
         else{
-            buttonSounds.play(falseButtonSoundID, 0.5f, 0.5f, 0, 0, 1.0f);
+            buttonSounds.play(falseButtonSoundID, volume, volume, 0, 0, 1.0f);
             button.setBackgroundResource(R.color.colorFalseButton);
             handler.postDelayed(new Runnable() {
                 public void run() {
@@ -152,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateQuestion(){
 
+        //If the quiz is completed app goes to finish activity and quiz infos gets passed to there
         if(atQuestion == NUMBER_OF_QUESTIONS){
             Intent intent = new Intent(MainActivity.this, FinishActivity.class);
             intent.putExtra("score", score);
@@ -161,10 +161,12 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        //Getting the current question IDs
         questionID = questions[atQuestion].getQuestionID();
         imageID = questions[atQuestion].getImageID();
         answerIDs = questions[atQuestion].getAnswerIDs();
 
+        //Setting views
         questionTextView.setText(questionID);
         questionImageView.setImageResource(imageID);
         aButton.setText(answerIDs[0]);
@@ -173,6 +175,7 @@ public class MainActivity extends AppCompatActivity {
         dButton.setText(answerIDs[3]);
         circularProgressBar.setProgress(PROGRESS_BAR_MAX);
 
+        //When question is updated a countdown timer starts running starting from 30 seconds
         counter = new CountDownTimer(30000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -192,6 +195,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //Finds 17 random indexes from 0 to length of question bank
     private int[] findRandomIndexes(){
         Random rnd = new Random();
         int[] array = new int[NUMBER_OF_QUESTIONS];
@@ -207,6 +211,7 @@ public class MainActivity extends AppCompatActivity {
         return array;
     }
 
+    //Disables the default sounds of the buttons
     private void disableButtonClickSounds() {
         aButton.setSoundEffectsEnabled(false);
         bButton.setSoundEffectsEnabled(false);
@@ -214,6 +219,7 @@ public class MainActivity extends AppCompatActivity {
         dButton.setSoundEffectsEnabled(false);
     }
 
+    //Disables the buttons
     private void disableButtons(){
         aButton.setClickable(false);
         bButton.setClickable(false);
@@ -221,6 +227,7 @@ public class MainActivity extends AppCompatActivity {
         dButton.setClickable(false);
     }
 
+    //Enable the buttons
     private void enableButtons(){
         aButton.setClickable(true);
         bButton.setClickable(true);
@@ -229,6 +236,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //Checks the pref file then sets isVolumeOn variable according to it
+    private void checkPreferences() {
+        SharedPreferences pref = getSharedPreferences("Settings", Context.MODE_PRIVATE);
+        isVolumeOn = pref.getBoolean("volume", false);
+    }
+
+    //Creates the question bank
     private Question[] createQuestionBank(){
         return new Question[]{
             new Question(R.string.question_1, R.drawable.question_image_1, 'c', 2,
@@ -344,13 +358,11 @@ public class MainActivity extends AppCompatActivity {
         };
     }
 
-
-    private static final String TAG = "Logs";
-
+    //If app was paused on main activity, it goes back to main menu
+    //Poor fix for timer issue :/
     @Override
     protected void onPause() {
         super.onPause();
-        Log.i(TAG, "onPause");
         counter.cancel();
         finish();
     }
