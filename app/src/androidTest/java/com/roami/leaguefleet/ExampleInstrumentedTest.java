@@ -1,4 +1,4 @@
-package com.example.mert.leagueoflegendsliginne;
+package com.roami.leaguefleet;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

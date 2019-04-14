@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.mert.leagueoflegendsliginne">
+    package="com.roami.leaguefleet">
 
     <application
         android:allowBackup="true"
@@ -9,22 +9,36 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
-            android:name=".LaunchActivity"
+            android:name="com.roami.leaguefleet.LaunchActivity"
             android:screenOrientation="portrait">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name=".MainActivity"
-            android:screenOrientation="portrait" />
+            android:name="com.roami.leaguefleet.MainActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
         <activity
-            android:name=".FinishActivity"
-            android:screenOrientation="portrait" />
-        <activity android:name=".SettingsActivity" />
+            android:name="com.roami.leaguefleet.FinishActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <activity
+            android:name="com.roami.leaguefleet.SettingsActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-9456292857540813~4893365778"/>
+
     </application>
 
 </manifest>

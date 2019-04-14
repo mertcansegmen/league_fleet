@@ -1,18 +1,19 @@
 <resources>
     <string name="app_name">Ligin Ne - LoL</string>
 
-    <!-- Start Activity -->
+    <!-- Launch Activity -->
 
     <string name="start_button_text">Teste Başla!</string>
     <string name="settings_button_text">Ayarlar</string>
     <string name="quit_button_text">Çık</string>
+    <string name="launch_banner_ad_unit_id">ca-app-pub-9456292857540813/8752719733</string>
 
     <!-- Main Activity -->
 
     <string name="question_image_description">Image of the question</string>
     <string name="mainmenu_image_description">Image for the main menu</string>
 
-    <string name="question_1">Sıçra yeteneği kaç saniyede bir kullanılabilir?</string>
+    <string name="question_1">Sıçra yeteneği kaç saniyede bir kullanılabilir? (Hiçbir rün etki etmeden)</string>
     <string name="question_2">Baron Nashor oyunun kaçıncı dakikasında canlanır?</string>
     <string name="question_3">Üç yetenek kullandığında şimşek çıkmasına sebep olan rün nedir?</string>
     <string name="question_4">Aşağıdaki karakterlerden hangisinin havaya savurma(zıplatma) özelliği yoktur?</string>
@@ -293,43 +294,54 @@
     <!-- Finish Activity -->
 
     <string name="finish_text_view">Ligin:</string>
-    <string name="go_menu_button_text">Menüye Dön</string>
+    <string name="play_again_button_text">Tekrar Dene</string>
     <string name="league_image_desc">Image to display the final league</string>
 
-    <string name="league_tv_r27">Şampiyonluk Ligi</string>
-    <string name="league_tv_r26">Ustalık Ligi</string>
-    <string name="league_tv_r5">Bronz I</string>
-    <string name="league_tv_r4">Bronz II</string>
-    <string name="league_tv_r3">Bronz III</string>
-    <string name="league_tv_r2">Bronz IV</string>
-    <string name="league_tv_r1">Bronz V</string>
-    <string name="league_tv_r10">Gümüş I</string>
-    <string name="league_tv_r9">Gümüş II</string>
-    <string name="league_tv_r8">Gümüş III</string>
-    <string name="league_tv_r7">Gümüş IV</string>
-    <string name="league_tv_r6">Gümüş V</string>
-    <string name="league_tv_r15">Altın I</string>
-    <string name="league_tv_r14">Altın II</string>
-    <string name="league_tv_r13">Altın III</string>
-    <string name="league_tv_r12">Altın IV</string>
-    <string name="league_tv_r11">Altın V</string>
+    <string name="finish_banner_ad_unit_id">ca-app-pub-9456292857540813/6004989661</string>
+
+    <string name="league_tv_r27">Ustalık II</string>
+    <string name="league_tv_r26">Ustalık III</string>
+    <string name="league_tv_r5">Bronz IV</string>
+    <string name="league_tv_r4">Demir I</string>
+    <string name="league_tv_r3">Demir II</string>
+    <string name="league_tv_r2">Demir III</string>
+    <string name="league_tv_r1">Demir IV</string>
+    <string name="league_tv_r10">Gümüş III</string>
+    <string name="league_tv_r9">Gümüş IV</string>
+    <string name="league_tv_r8">Bronz I</string>
+    <string name="league_tv_r7">Bronz II</string>
+    <string name="league_tv_r6">Bronz III</string>
+    <string name="league_tv_r15">Altın II</string>
+    <string name="league_tv_r14">Altın III</string>
+    <string name="league_tv_r13">Altın IV</string>
+    <string name="league_tv_r12">Gümüş I</string>
+    <string name="league_tv_r11">Gümüş II</string>
     <string name="league_tv_r20">Platin I</string>
     <string name="league_tv_r19">Platin II</string>
     <string name="league_tv_r18">Platin III</string>
     <string name="league_tv_r17">Platin IV</string>
-    <string name="league_tv_r16">Platin V</string>
-    <string name="league_tv_r25">Elmas I</string>
-    <string name="league_tv_r24">Elmas II</string>
-    <string name="league_tv_r23">Elmas III</string>
-    <string name="league_tv_r22">Elmas IV</string>
-    <string name="league_tv_r21">Elmas V</string>
+    <string name="league_tv_r16">Altın I</string>
+    <string name="league_tv_r25">Ustalık IV</string>
+    <string name="league_tv_r24">Elmas I</string>
+    <string name="league_tv_r23">Elmas II</string>
+    <string name="league_tv_r22">Elmas III</string>
+    <string name="league_tv_r21">Elmas IV</string>
+    <string name="league_tv_r28">Ustalık I</string>
+    <string name="league_tv_r29">Üstatlık IV</string>
+    <string name="league_tv_r30">Üstatlık III</string>
+    <string name="league_tv_r31">Üstatlık II</string>
+    <string name="league_tv_r32">Üstatlık I</string>
+    <string name="league_tv_r33">Şampiyonluk IV</string>
+    <string name="league_tv_r34">Şampiyonluk III</string>
+    <string name="league_tv_r35">Şampiyonluk II</string>
+    <string name="league_tv_r36">Şampiyonluk I</string>
 
     <!-- Settings Activity -->
 
     <string name="spinner_text_field">Ses</string>
     <string name="contact_button">İletişim bilgilerini göster</string>
     <string name="version_text_view">v1.0</string>
-    <string name="contact_text_view">lolliginne@gmail.com</string>
+    <string name="contact_text_view">liginne.lol@gmail.com</string>
     <string name="rate_button">Uygulamayı puanla!</string>
 
 
